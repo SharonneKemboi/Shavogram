@@ -1,0 +1,43 @@
+{% load bootstrap4%}
+{% load static%}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Register</title>
+    {% block styles %}
+    {% bootstrap_css%}
+    {% endblock %}
+</head>
+
+<body>
+    <div class="m-auto col-4 mt-5" style="position:relative;top: 20px;">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="text-center">Shavogram</h3>
+            </div>
+            <div class="card-body">
+                <form action="accounts/login/" method="post">
+                    {% csrf_token %}
+                    {% bootstrap_form form %}
+                    <div class="form-group">
+                        {% block button%}
+                        <button type="submit" class="btn btn-info">Login</button>
+                        {% endblock %}
+                    </div>
+                </form>
+                <p>Don't have a Shavogram account? Register <a href="#">here</a></p>
+            </div>
+        </div>
+    </div>
+    {% block scripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    {% bootstrap_javascript %}
+    {% endblock %}
+</body>
+
+</html>
