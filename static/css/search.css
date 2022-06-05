@@ -1,43 +1,39 @@
 * {
-    overflow-x: hidden;
     font-family: 'Gabriela';
-    
 }
-
-body{
-    background-image: url(/media/pictures/dark-blue-product-background.jpg);
+.container {
+    margin-top: 100px;
 }
 nav {
     box-shadow: 0 4px 2px -2px gray;
     margin-bottom: 50px;
 }
-.desc-on-sm {
-    display: none;
-}
-.container {
-    margin-top: 50px;
-}
-
 .nav-search-form {
     position: relative;
     left: 30%;
 }
+.desc-on-sm {
+    display: none;
+}
+
 @media (max-width: 930px) {
     .nav-search-form {
-           position: relative;
-           left: 0;
-           right: 30%;
+        position: relative;
+        left: 0;
+        right: 30%;
     }
+
     .nav-search-btn {
         display: none;
     }
+
     .desc-on-sm {
         display: inline-block;
     }
 }
 
 @media (max-width: 750px) {
-    .comment-val {
-        width: 50%;
+    .comment-btn {
+        display: none
     }
 }
