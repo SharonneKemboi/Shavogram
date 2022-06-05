@@ -32,17 +32,16 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'bootstrap4',
+    'shavogram',
+    'comments',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'shavogram',
-    'bootstrap4',
-
-   
-
+  
 
 ]
 
@@ -75,6 +74,9 @@ TEMPLATES = [
     },
 ]
 
+
+LOGOUT_REDIRECT_URL = 'login/'
+
 WSGI_APPLICATION = 'instagram.wsgi.application'
 
 
@@ -84,7 +86,7 @@ WSGI_APPLICATION = 'instagram.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'shavogram',
+        'NAME': 'shavograms',
         'USER': 'postgres',
         'PASSWORD':'Atara',
     }
@@ -115,7 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Nairobi'
 
 USE_I18N = True
 
