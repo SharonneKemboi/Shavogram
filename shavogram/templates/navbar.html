@@ -1,0 +1,37 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top mb-5">
+    <div class="brand-sign">
+        <a href="/"><img src="../../media/pictures/icon.png" alt="" height="45px" width="130px"></a>
+    </div>
+   
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#myNav"
+    aria-controls="myNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="myNav">
+        <form action="{% url 'search' %}" role="search" class="form-inline nav-search-form" >
+            <input type="text" name="user_search_term" id="" class="form-control" style="height: 30px;border-top-right-radius: 0;border-bottom-right-radius: 0" placeholder="Search users...">
+            <div class="input-group-btn">
+                <button type="submit" class="btn nav-search-btn" style="height: 30px;overflow: hidden; border-top-left-radius: 0;border-bottom-left-radius: 0;"><i  class="fas fa-search"></i></button>
+            </div>
+        </form>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item active ml-3 mt-1">
+                <a class="nav-link" href="/"><i class="mr-2 fas fa-home" style="font-size: 18px"></i></span><span class="desc-on-sm">Home</span></a>
+            </li>
+            <li class="nav-item active ml-3 mt-1">
+                <a class="nav-link" href="/add/picture"><i class="mr-2 fas fa-plus" style="font-size: 18px"></i></span><span class="desc-on-sm">Add Picture</span></a>
+            </li>
+            <li class="nav-item active ml-3 mt-1">
+                <a class="nav-link" href="{% url 'my_profile'%}"><i class="mr-2 fas fa-user" style="font-size: 18px"></i><span class="desc-on-sm">Profile</span></a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link ml-3 mt-1" href="/accounts/password/change"><i class="mr-2 fas fa-user-lock" style="font-size: 18px"></i><span class="desc-on-sm">Change Password</span></a>
+            </li>
+            <li class="nav-item active ml-3 mt-1">
+                <a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt mr-2" style="font-size: 18px"></i><span class="desc-on-sm">Logout</span></a>
+            </li>
+         
+        </ul>
+    </div>
+</nav> 

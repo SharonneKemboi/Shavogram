@@ -1,0 +1,58 @@
+{% load bootstrap4 %}
+{% load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{title}}</title>
+    {% block styles %}
+        {% bootstrap_css %}
+        <link rel="stylesheet" href="{% static 'css/search.css'%}">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css?family=Gabriela" rel="stylesheet">
+        {% endblock %}
+</head>
+<body>
+    {% include 'navbar.html' %}
+    <div class="container">
+        {% if users %}
+        {% for user in users%}
+            <div class="user-profiles">
+                {% if user.profile.pic%}
+                <img class="d-inline-block" src="../../media/{{user.profile.pic}}" alt="" height="60px" width="60px" style="border-radius: 50%;">
+                {% else %}
+                <img class="d-inline-block" src="../../media/pictures/profpic.webp" alt="" height="60px" width="60px" style="border-radius: 50%;">
+                {% endif %}
+                <a href="{% url 'profile' user.id%}" class="text-dark"><h4 class="d-inline-block">{{user.username}}</h4></a>
+                <table class="table w-50 mt-4">
+                    <tbody>
+                        <td>Posts: {{user.posts.all.count}}</td>
+                        <td>Following: {{user.user_following.all.count}}</td>
+                        <td>Followers: {{user.user_followers.all.count}}</td>
+                    </tbody>
+                </table>
+            </div>
+        {% endfor %}
+    {% else %}
+        <h3>There are no users like dat</h3>
+    {% endif %}
+    </div>
+    {% block scripts %}
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    {% bootstrap_javascript %}
+    <script>
+        window.addEventListener( "pageshow", function ( event ) {
+            var historyTraversal = event.persisted ||
+            ( typeof window.performance != "undefined" &&
+            window.performance.navigation.type === 2 );
+            if ( historyTraversal ) {
+              
+                window.location.reload();
+            }
+        });
+    </script>
+    {% endblock %}
+</body>
+</html>
