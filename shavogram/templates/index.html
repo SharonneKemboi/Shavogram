@@ -1,5 +1,7 @@
 {% load bootstrap4 %}
 {% load static%}
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,25 +11,196 @@
     <title>Home</title>
     {% block styles%}
         {% bootstrap_css %}
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+        <link rel="stylesheet" href="{% static 'css/index.css' %}">
+        <link href="https://fonts.googleapis.com/css?family=Gabriela" rel="stylesheet">
     {% endblock %}
 </head>
-<body>
-    <div class="container">
+
+<body style="overflow-x:hidden">
+
+    {% include 'navbar.html' %}
+
+    <div class="container" id="picture-section">
+       
         {% for image in images%}
-            <div class="row mt-3">
-                <div class="col-4">
-                    <div class="card">
-                        <div class="card-header">
-                            {{image.user.username}}
+
+
+        <div class="row mt-3">
+            <div class="col-sm-10 col-md-9 col-lg-5 m-auto">
+                <div class="card" id="{{image.id}}">
+                    <div class="card-header">
+                        {% if image.user.profile.pic%}
+                        <img src="../../media/{{image.user.profile.pic}}" alt="" height="40px" width="40px" style="border-radius: 50%;">
+                        {% else %}
+                        <img src="../../media/pictures/profile.jpg" alt="" height="40px" width="40px" style="border-radius: 50%;">
+                        {% endif %}
+                        <a href="{% url 'profile' image.user.id%}" class="text-dark"> {{image.user.username}} </a>
+                        {% if image.user.myself %}
+                        <button class="btn follow-btn" style="position: relative;left: 10000px">Myself</button>
+                        {% elif image.user.is_following %}
+                        <a class="btn follow-btn" onclick="follower('{{image.id}}')"><i class="fas fa-user-check"></i></a>
+                        {% else %}
+                        <a class="btn follow-btn" onclick="follower('{{image.id}}')"><i class="fas fa-user-plus"></i></a>
+                        {% endif %}
+                        <div>
+                            <small>{{image.pub_date|timesince}} ago</small>
                         </div>
-                        <div class="card-body">
-                            <img src="{{image.image_url.url}}" alt="" class="img-responsive" style="height: 200px; width: 300px;">
+                    </div>
+                    <div class="card-body p-0">
+                        <img src="{{image.image_url.url}}" alt="" ondblclick="liker('{{image.id}}')"class="img-responsive" style="max-height: 400px; width: 100%;">
+                       
+                    </div>
+                   
+                    <div class="card-footer">
+                        {% if image.user_has_liked %}
+                        <span onclick="liker('{{image.id}}')" class="likes-btn"><i class="fas fa-heart" style="color: red;border: none;font-size: 20px"></i></span>
+                        {% else %}
+                        <span onclick="liker('{{image.id}}')" class="likes-btn"><i class="far fa-heart" style="font-size: 20px"></i></span>
+                        {% endif %}
+                        <span><i class="far fa-comment ml-2" onclick="comment('{{image.id}}')" style="cursor:pointer"></i></span>
+                        <p>{{image.caption}}</p>
+                        <form action="{% url 'like' %}" method="post" class="form-inline">
+                            {%csrf_token%}
+                            <p class="likes-icon mr-2">{{image.likes.all.count}} likes</p>
+                           
+                        </form>
+                        <div class="comments">
+                            {% for comment in photo.comments.all %}
+                            <p class="actual-comment">{{comment.user.username}}: {{comment.mycomments}}</p>
+                            {% endfor %} 
                         </div>
+                        <form action="{% url 'comment' %}" method="post" class="form-inline">
+                            {% csrf_token %}
+                            <input type="text" name="comment" id="" class="form-control comment-val"  style="height: 30px;border-top-right-radius: 0; border-bottom-right-radius: 0" required placeholder="Add a comment...">
+                            <button type="submit" class="btn btn-sm btn-primary comment-btn" onclick="commenter('{{image.id}}')" style="height: 30px; border-top-left-radius: 0; border-bottom-left-radius: 0" >Add</button>
+                        </form>
                         
                     </div>
                 </div>
             </div>
+        </div>
         {% endfor%}
     </div>
+    {% block scripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    {% bootstrap_javascript %}
+    <script>
+        window.addEventListener( "pageshow", function ( event ) {
+            var historyTraversal = event.persisted ||
+            ( typeof window.performance != "undefined" &&
+            window.performance.navigation.type === 2 );
+            if ( historyTraversal ) {
+                // Handle page restore.
+                window.location.reload();
+            }
+        });
+
+
+        $(".like-btn").click((e) => {
+                e.preventDefault()
+        }) 
+        function liker(id) {
+            image_id = id
+            let icons = document.getElementsByClassName("likes-icon")
+            let btns = document.getElementsByClassName("fa-heart")
+            btns_arr = []
+            icons_arr = []
+            for (let i of btns) {
+                btns_arr.unshift(i)
+            }
+            for(let i of icons) {
+                icons_arr.unshift(i)
+            }
+                $.ajax({
+                    "url":"/ajax/like/",
+                    "type": "POST",
+                    "data": {
+                        "id":image_id, 
+                        "csrfmiddlewaretoken": '{{csrf_token}}'
+                    },
+                    "dataType":"json",
+                    "success": function(res) {
+                        let imagess = parseInt(image_id)
+                        imagess -= 1
+                        icons_arr[imagess].innerHTML = res['likes'] + " likes"
+                        if(res["to_red"] == 1) {
+                            btns_arr[imagess].classList.remove("far")
+                            btns_arr[imagess].classList.add("fas")
+                            btns_arr[imagess].style.color = "red"
+
+                           
+                        } else {
+                            btns_arr[imagess].classList.remove("fas")
+                            btns_arr[imagess].classList.add("far")  
+                            btns_arr[imagess].style.color = "black"          
+                        }
+                    }
+                })
+        }  
+        
+        $(".comment-btn").click(e => {
+                e.preventDefault()
+        })
+        function commenter(id) {
+            let comments = document.getElementsByClassName("comments")
+            let image_id = parseInt(id)
+            let commentVals = document.getElementsByClassName("comment-val")
+            comments_arr = []
+            commentVal_arr = []
+            for(let i of comments) {
+                comments_arr.unshift(i)
+            }
+            for(let i of commentVals) {
+                commentVal_arr.unshift(i)
+            }
+            let comment = commentVal_arr[id - 1].value
+            console.log(comment)
+
+            $.ajax({
+                "url": "/ajax/comment/",
+                "type": "POST",
+                "data": {
+                    "id": image_id,
+                    "comment": comment,
+                    "csrfmiddlewaretoken": '{{csrf_token}}'
+                },
+                "dataType": "json",
+                "success": function(res) {
+                    let p = document.createElement("p")
+                    p.setAttribute("class", "actual-comment")
+                    p.textContent = res['user'] + ": " + res["comment"]
+                    comments_arr[image_id - 1].appendChild(p)
+                }
+            })
+            $(".comment-val").val("") 
+        }
+        
+        function follower(id) {
+                let image_id = parseInt(id)
+                followBtns = document.getElementsByClassName("follow-btn")
+                followBtns_arr = []
+                for (let i of followBtns) {
+                    followBtns_arr.unshift(i)
+                }
+                $.ajax({
+                    "url": "/ajax/follow/",
+                    "type": "POST",
+                    "data": {
+                        "id":image_id,
+                        "csrfmiddlewaretoken": '{{csrf_token}}'
+                        },
+                    "dataType": "json",
+                    "success": function(res) {
+                        if(res['followed'] == 1) {
+                            followBtns_arr[image_id - 1].innerHTML = "<i class='fas fa-user-check'></i>"
+                        } else {
+                            followBtns_arr[image_id - 1].innerHTML = "<i class='fas fa-user-plus'></i>"
+                        }
+                    }
+                })
+        }
+    </script>
+{% endblock %}
 </body>
 </html>
