@@ -15,12 +15,12 @@ Including another URLconf
 """
 from django.contrib.auth import views
 from django.contrib import admin
-from django.urls import path, include, re_path
+from django.urls import path, include, re_path,reverse_lazy
 from django.contrib.auth import views as auth_views
-from django.urls import path, reverse_lazy
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('sharonnekay/', admin.site.urls),
     path('logout/', auth_views.logout_then_login, name='logout'),
     path('', include('shavogram.urls')),
     path('accounts/',include('registration.backends.simple.urls')),
