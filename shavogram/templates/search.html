@@ -21,7 +21,7 @@
         {% for user in users%}
             <div class="user-profiles">
                 {% if user.profile.pic%}
-                <img class="d-inline-block" src="../../media/{{user.profile.pic}}" alt="" height="60px" width="60px" style="border-radius: 50%;">
+                <img class="d-inline-block" src="../../media/{{user.profile.picture}}" alt="" height="60px" width="60px" style="border-radius: 50%;">
                 {% else %}
                 <img class="d-inline-block" src="../../media/pictures/profpic.webp" alt="" height="60px" width="60px" style="border-radius: 50%;">
                 {% endif %}
