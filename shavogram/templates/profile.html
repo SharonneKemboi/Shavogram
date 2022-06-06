@@ -1,0 +1,115 @@
+{% load bootstrap4 %}
+{% load static%}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{user.username}}</title>
+    {% block styles%}
+        {% bootstrap_css%}
+        <link rel="stylesheet" href="{% static 'css/profile.css'%}">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+        <link href="https://fonts.googleapis.com/css?family=Gabriela" rel="stylesheet">
+    {% endblock%}
+
+</head>
+<body style="overflow-x: hidden; background:#F5F5F5">
+    {% include 'navbar.html' %}
+    {% include 'modal.html'%}
+    <div class="container" style="margin-top: 130px;">
+        <div class="row profile-head mt-5">
+            <div class="col-sm-10 col-md-4 text-center">
+                {% if user.profile.pic%}
+                <img src="../../media/{{user.profile.picture}}" alt="" height="180px" width="180px" class="profile-pic">
+                {% else %}
+                <img src="../../media/picture/profile.jpg" alt="" height="180px" width="180px" class="profile-pic">
+                {% endif %}
+            </div>
+            <div class="col-sm-10 col-md-5">
+                <h4 class="d-inline-block">{{user.username}}</h4>
+                <table class="table">
+                    <tbody>
+                        <td>Posts: {{user.posts.all.count}}</td>
+                        <td id = "count">Followers: {{user.user_followers.all.count}}</td>
+                        <td>Following: {{user.user_following.all.count}}</td>
+                    </tbody>
+                </table>
+                {% if is_following %}
+                <button class="btn btn-success mb-2" id = "follow-btn" onclick="follower('{{user.id}}')">Following</button>
+                {% else %}
+                <button class="btn btn-primary mb-2" id="follow-btn" onclick="follower('{{user.id}}')">Follow</button>
+                {% endif %}
+                <p>{{user.profile.bio}}</p>
+            </div>
+        </div>
+
+        <hr>
+        <div class="container">
+            <div class="row m-auto image-container" style="max-width: 750px">
+                {% for image in user.posts.all%}
+                <div class="user-images col-sx-10 col-sm-6 col-md-6 col-lg-4 mb-1">
+                    <img src="{{image.image_url.url}}" alt="" onclick="showModal('{{image.image_url.url}}','{{user.username}}','{{image.caption}}')"="200px" width="200px">
+                </div>
+                {% empty %}
+                <h4 class="text-center">User has no posts</h4>
+                {% endfor %}
+            </div>
+       
+        </div>
+    </div>
+    {% block scripts %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    {% bootstrap_javascript %}
+    <script>
+    window.addEventListener( "pageshow", function ( event ) {
+        var historyTraversal = event.persisted ||
+        ( typeof window.performance != "undefined" &&
+        window.performance.navigation.type === 2 );
+        if ( historyTraversal ) {
+            // Handle page restore.
+            window.location.reload();
+        }
+    });
+
+    showModal = (url,name,caption) => {
+        $("#label").text(name)
+        $("#myModal").modal("show")
+        $(".mod-img").attr("src",url)
+        $("#img-desc").text(caption)
+      
+    }
+
+    function follower(id) {
+        let user_id = parseInt(id)
+        followBtn = document.getElementById("follow-btn")
+        console.log(followBtn)
+        $.ajax({
+            "url": "/ajax/follow/profile/",
+            "type": "POST",
+            "data": {
+            "id":user_id,
+            "csrfmiddlewaretoken": '{{csrf_token}}'
+            },
+            "dataType": "json",
+            "success": function(res) {
+                if(res['followed'] == 1) {
+                    followBtn.classList.remove("btn-primary")
+                    followBtn.classList.add("btn-success")
+                    followBtn.textContent = "Following"
+                    $("#count").text("Followers: " + res["count"])
+                } else {
+                    followBtn.classList.remove("btn-success")
+                    followBtn.classList.add("btn-primary")
+                    followBtn.textContent = "Follow" 
+                    $("#count").text("Followers: " + res["count"])
+                }  
+            }
+        })
+    }
+    </script>
+    {% endblock %}
+</body>
+</html>
