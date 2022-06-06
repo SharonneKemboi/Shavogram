@@ -6,7 +6,9 @@
 
 
 ### Screenshot of the App
-<img src="">
+
+<img src="https://github.com/SharonneKemboi/Shavogram/blob/master/media/pictures/Screenshot%20from%202022-06-06%2019-42-31.png">
+<img src="https://github.com/SharonneKemboi/Shavogram/blob/master/media/pictures/Screenshot%20from%202022-06-06%2019-42-18.png">
 
 
 ## Table of Content
@@ -111,7 +113,7 @@ $ sudo apt-get install postgresql postgresql-contrib libpq-dev
 
 > [MIT License](https://github.com/SharonneKemboi/Shavogram/blob/master/LICENSE) 
 
-* this application's source code is free for any open source projects
+* This application's source code is free for any open source projects
 
 > Copyright (c) 2022 **Sharonne Kemboi**
 
